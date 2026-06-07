@@ -15,7 +15,7 @@ MediCare is a medicine reminder web application that helps users manage medicati
 - HTML
 - CSS
 - JavaScript
-- Firebase
+
 
 ## Developer
 Bhavya Ramisetty
