@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare Reminder</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<div class="app">
+
+    <aside class="sidebar">
+        <div class="logo">💊 <span>MediCare</span></div>
+        <ul>
+            <li class="nav-item active" onclick="scrollToSection('dashboardSection', this)">🏠 Dashboard</li>
+            <li class="nav-item" onclick="scrollToSection('medicineSection', this)">💊 Medicines</li>
+            <li class="nav-item" onclick="scrollToSection('historySection', this)">📜 History</li>
+            <li class="nav-item" onclick="scrollToSection('caregiverSection', this)">👨‍⚕ Caregiver</li>
+            <li class="nav-item" onclick="scrollToSection('settingsSection', this)">⚙ Settings</li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+
+        <div class="top-bar">
+            <div>
+                <h2 id="greetingText">Good Health Dashboard 👋</h2>
+                <p>Track medicines, reminders, history, and caregiver updates.</p>
+            </div>
+            <button id="themeToggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+        </div>
+
+        <section id="dashboardSection" class="hero">
+            <h1>Stay Healthy 👋</h1>
+            <p>Your health is your greatest wealth.</p>
+        </section>
+
+        <section class="stats-container">
+            <div class="stat-card"><h3>💊 Total</h3><p id="totalMedicines">0</p></div>
+            <div class="stat-card"><h3>✅ Taken</h3><p id="takenMedicines">0</p></div>
+            <div class="stat-card"><h3>⏳ Pending</h3><p id="pendingMedicines">0</p></div>
+            <div class="stat-card"><h3>❌ Missed</h3><p id="missedMedicines">0</p></div>
+            <div class="stat-card"><h3>🔁 Daily</h3><p id="dailyMedicines">0</p></div>
+        </section>
+
+        <section class="dashboard-grid">
+            <div class="panel">
+                <h2>⏰ Upcoming Dose</h2>
+                <div id="upcomingDose" class="upcoming-card">No upcoming dose</div>
+            </div>
+
+            <div class="panel">
+                <h2>📈 Today Progress</h2>
+                <div class="progress-bar">
+                    <div id="todayProgressFill"></div>
+                </div>
+                <p id="todayProgressText">0% completed</p>
+            </div>
+
+            <div class="panel wide">
+                <h2>📊 Weekly Taken vs Missed</h2>
+                <canvas id="weeklyChart" width="600" height="220"></canvas>
+            </div>
+        </section>
+
+        <section id="medicineSection" class="section-box">
+            <div class="section-title">
+                <h2>💊 Add / Edit Medicine</h2>
+                <p>Add medicine details with category and reminder timings.</p>
+            </div>
+
+            <div class="add-box">
+                <input type="hidden" id="editMedicineId">
+
+                <input type="text" id="medicineName" placeholder="Medicine Name">
+
+                <select id="medicineCategory">
+                    <option value="">Select Category</option>
+                    <option value="Tablet">Tablet</option>
+                    <option value="Syrup">Syrup</option>
+                    <option value="Injection">Injection</option>
+                    <option value="Drops">Drops</option>
+                </select>
+
+                <div id="timeInputs">
+                    <input type="time" class="medicineTime">
+                </div>
+
+                <label class="repeat-box">
+                    <input type="checkbox" id="repeatDaily">
+                    Repeat Daily
+                </label>
+
+                <div class="button-row">
+                    <button onclick="addTimeField()">+ Add Time</button>
+                    <button id="saveMedicineBtn" onclick="saveMedicine()">+ Add Medicine</button>
+                    <button class="cancel-btn" onclick="cancelEdit()">Cancel</button>
+                </div>
+            </div>
+
+            <div class="section-title">
+                <h2>🔍 Search Medicine</h2>
+            </div>
+
+            <input class="search-box" type="text" id="searchMedicine" placeholder="Search medicine..." oninput="loadMedicines()">
+
+            <div class="section-title">
+                <h2>📋 Medicine Schedule</h2>
+                <p>Your added medicines and dose status.</p>
+            </div>
+
+            <div id="medicineList"></div>
+        </section>
+
+        <section id="historySection" class="history-section">
+            <div class="section-title">
+                <h2>📜 Medicine History</h2>
+                <p>View taken and missed medicine records.</p>
+            </div>
+
+            <div class="button-row">
+                <button onclick="downloadCSV()">Download CSV</button>
+                <button onclick="downloadPDF()">Download PDF</button>
+            </div>
+
+            <div id="historyList"></div>
+        </section>
+
+        <section id="caregiverSection" class="caregiver-box">
+            <div class="section-title">
+                <h2>👨‍⚕ Caregiver Sharing</h2>
+                <p>Store caregiver contact and view medicine status.</p>
+            </div>
+
+            <p>Your Code:</p>
+            <div class="code-box" id="myCaregiverCode"></div>
+
+            <input id="caregiverInput" placeholder="Enter caregiver code">
+            <input id="caregiverName" placeholder="Caregiver Name">
+            <input id="caregiverPhone" placeholder="Caregiver Phone">
+            <input id="caregiverEmail" placeholder="Caregiver Email">
+
+            <div class="button-row">
+                <button onclick="linkCaregiver()">Save Caregiver</button>
+                <button onclick="loadCaregiverDashboard()">View Caregiver Data</button>
+            </div>
+
+            <div id="caregiverDashboard"></div>
+        </section>
+
+        <section id="settingsSection" class="settings-section">
+            <div class="section-title">
+                <h2>⚙ Settings</h2>
+                <p>Manage appearance and app preferences.</p>
+            </div>
+
+            <button onclick="toggleTheme()">Toggle Dark / Light Mode</button>
+            <button class="delete-btn" onclick="clearAllData()">Clear All Data</button>
+        </section>
+
+    </main>
+</div>
+
+<nav class="bottom-nav">
+    <button onclick="scrollToSectionMobile('dashboardSection')">🏠<span>Home</span></button>
+    <button onclick="scrollToSectionMobile('medicineSection')">💊<span>Meds</span></button>
+    <button onclick="scrollToSectionMobile('historySection')">📜<span>History</span></button>
+    <button onclick="scrollToSectionMobile('caregiverSection')">👨‍⚕<span>Care</span></button>
+</nav>
+
+<script src="script.js"></script>
+</body>
+</html>
